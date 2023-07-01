@@ -4,6 +4,15 @@ use std::ops::{IndexMut, Index};
 use::generic_matrix;
 use generic_matrix::Matrix;
 
+const SCAN_BLOCK: Vec<[i32; 8]> = vec![[1, 1, 1, 1, 1, 1, 1, 0],
+                                       [1, 0, 0, 0, 0, 0, 1, 0],
+                                       [1, 0, 1, 1, 1, 0, 1, 0],
+                                       [1, 0, 1, 1, 1, 0, 1, 0],
+                                       [1, 0, 1, 1, 1, 0, 1, 0],
+                                       [1, 0, 0, 0, 0, 0, 1, 0],
+                                       [1, 1, 1, 1, 1, 1, 1, 0],
+                                       [0, 0, 0, 0, 0, 0, 0, 0]];
+
 #[derive(Clone, Copy)]
 enum Module {
     Unknown,
