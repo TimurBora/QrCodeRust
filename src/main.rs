@@ -13,6 +13,8 @@ const SCAN_BLOCK: Vec<[i32; 8]> = vec![[1, 1, 1, 1, 1, 1, 1, 0],
                                        [1, 1, 1, 1, 1, 1, 1, 0],
                                        [0, 0, 0, 0, 0, 0, 0, 0]];
 
+const SCAN_MATRIX: Matrix<[i32; 8]> = Matrix::from_vec(8, 8, SCAN_BLOCK);
+
 #[derive(Clone, Copy)]
 enum Module {
     Unknown,
@@ -80,29 +82,17 @@ struct QrBuilder {
 }
 
 impl QrBuilder {
-    fn create_finder() -> Vec<Module> {
-        let mut finder_matrix: Matrix<Module> = Matrix::from_vec(7, 7, vec![Module::Function(true); 49]);
-        let mut finder_vector: Vec<Module>;
+    fn add_finder(&mut self) -> Matrix<Module> {
+        let cordinate_vec: Vec<(usize, usize)> = self.get_finder_cordinate();
 
-        for i in 0..finder_matrix.row() {
-            for j in 0..finder_matrix.column() {
-                if i == 1 || i == 5 || j == 1 || j == 5 {
-                    let mut element: Module = *finder_matrix.index_mut((i, j));
-                    element = Module::Function(false);
-                }
-                finder_vector.push(*finder_matrix.index((i, j)));
-            }
-        }
-
-        return finder_vector;
+        
+        
     }
 
-    fn add_finder(&mut self) -> Matrix<Module> {
-        let finder_vector: Vec<Module> = QrBuilder::create_finder();
-        let cordinate_vec: Vec<(usize, usize)> = vec![(0, 0),
-                                                      (0, self.matrix.modules.column() - 7), 
-                                                      (self.matrix.modules.row() - 7, 0)];
-        
+    fn get_finder_cordinate(&self) -> Vec<(usize, usize)> {
+        return vec![(0, 0),
+                    (0, self.matrix.modules.column() - 7), 
+                    (self.matrix.modules.row() - 7, 0)];
     }
 }
 
