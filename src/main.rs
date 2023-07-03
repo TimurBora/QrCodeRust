@@ -4,18 +4,16 @@ use std::ops::{IndexMut, Index};
 use::generic_matrix;
 use generic_matrix::Matrix;
 
-const SCAN_BLOCK: Vec<[i32; 8]> = vec![[1, 1, 1, 1, 1, 1, 1, 0],
-                                       [1, 0, 0, 0, 0, 0, 1, 0],
-                                       [1, 0, 1, 1, 1, 0, 1, 0],
-                                       [1, 0, 1, 1, 1, 0, 1, 0],
-                                       [1, 0, 1, 1, 1, 0, 1, 0],
-                                       [1, 0, 0, 0, 0, 0, 1, 0],
-                                       [1, 1, 1, 1, 1, 1, 1, 0],
-                                       [0, 0, 0, 0, 0, 0, 0, 0]];
+const SCAN_BLOCK: [[i32; 8]; 8] = [[1, 1, 1, 1, 1, 1, 1, 0],
+                                   [1, 0, 0, 0, 0, 0, 1, 0],
+                                   [1, 0, 1, 1, 1, 0, 1, 0],
+                                   [1, 0, 1, 1, 1, 0, 1, 0],
+                                   [1, 0, 1, 1, 1, 0, 1, 0],
+                                   [1, 0, 0, 0, 0, 0, 1, 0],
+                                   [1, 1, 1, 1, 1, 1, 1, 0],
+                                   [0, 0, 0, 0, 0, 0, 0, 0]];
 
-const SCAN_MATRIX: Matrix<[i32; 8]> = Matrix::from_vec(8, 8, SCAN_BLOCK);
-
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 enum Module {
     Unknown,
     Reserved,
@@ -68,8 +66,10 @@ impl QrMatrix {
         for i in 0..self.size {
             for j in 0..self.size {
                 match self.modules.index((i, j)) {
-                    Module::Unknown => print!("0"),
-                    _ => print!(" "),
+                    Module::Unknown => print!("-"),
+                    Module::Function(true) => print!("1"),
+                    Module::Function(false) => print!("0"),
+                    _ => print!("0"),
                 }
             }
             println!("");
@@ -77,22 +77,77 @@ impl QrMatrix {
     }
 }
 
-struct QrBuilder {
-    matrix: QrMatrix,   
+struct FinderBuilder<'a> {
+    matrix: &'a mut QrMatrix,   
 }
 
-impl QrBuilder {
-    fn add_finder(&mut self) -> Matrix<Module> {
-        let cordinate_vec: Vec<(usize, usize)> = self.get_finder_cordinate();
+impl<'a> FinderBuilder<'a> {
+    fn add_finders(&mut self) {
+        let cordinates: [(usize, usize, usize); 3] = self.get_finder_cordinate();
 
-        
-        
+        for cordinate in cordinates {
+            self.add_finder(&cordinate)
+        }
+    
     }
 
-    fn get_finder_cordinate(&self) -> Vec<(usize, usize)> {
-        return vec![(0, 0),
-                    (0, self.matrix.modules.column() - 7), 
-                    (self.matrix.modules.row() - 7, 0)];
+    fn add_finder(&mut self, cordinate: &(usize, usize, usize)) {
+        let mut finder_matrix: Matrix<Module> = Matrix::from_vec(8, 8, FinderBuilder::generate_finder());
+
+        let rotate_num = cordinate.2;
+        FinderBuilder::rotate_finder(&mut finder_matrix, rotate_num);
+
+        let start_height: usize = cordinate.0;
+        let start_width: usize = cordinate.1;
+
+        for i in 0..8 {
+            for j in 0..8 {
+                let mut main_element: &mut Module = self.matrix.modules.index_mut((i + start_height, j + start_width));
+                *main_element = *finder_matrix.index_mut((i, j));  
+            }
+        }
+    }
+
+    fn get_finder_cordinate(&self) -> [(usize, usize, usize); 3] {
+        return [(0, 0, 0),
+                (0, self.matrix.modules.column() - 8 as usize, 1), 
+                (self.matrix.modules.row() - 8 as usize, 0, 3)];
+    }
+
+    fn generate_finder() -> Vec<Module> {
+        let mut matrix_vector: Vec<Module> = Vec::new();
+        for i in 0..8 {
+            for j in 0..8 {
+                if SCAN_BLOCK[i][j] == 1 {
+                    matrix_vector.push(Module::Function(true));
+                }
+                else {
+                    matrix_vector.push(Module::Function(false));
+                }
+            }
+        }
+        
+        return matrix_vector;
+    }
+
+    fn rotate_finder(finder_matrix: &mut Matrix<Module>, rotate_num: usize) -> &mut Matrix<Module> {
+        let n: usize = 8;
+
+        let mut temp: Vec<Vec<Module>> = vec![vec![Module::Unknown; n]; n];
+        for _ in 0..rotate_num {
+            for i in 0..n {
+                for j in 0..n {
+                    temp[j][n - i - 1] = *finder_matrix.index((i, j));
+                }
+            }
+
+            for i in 0..n {
+                for j in 0..n {
+                    *finder_matrix.index_mut((i, j)) = temp[i][j];
+                }
+            }
+        }
+        return finder_matrix;
     }
 }
 
@@ -110,7 +165,10 @@ fn get_height(cordinate1: &(usize, usize), cordinate2: &(usize, usize)) -> usize
 
 
 fn main() {
-    let mut matrix: QrMatrix = QrMatrix::new(7);
-    matrix.set_rect((0, 0), (3, 1), Module::Data(true));
-    matrix.print_matrix();
+    let mut qr_block: QrMatrix = QrMatrix::new(28);
+    let mut finder_builder: FinderBuilder = FinderBuilder { matrix: &mut qr_block };
+
+    finder_builder.add_finders();
+
+    qr_block.print_matrix();
 }
