@@ -4,7 +4,6 @@ use crate::qr_matrix::QrMatrix;
 use crate::module::Module;
 
 use crate::constants::FINDER_SIZE;
-use crate::constants::FINDER_BLOCK;
 
 use::generic_matrix;
 use generic_matrix::Matrix;
@@ -31,8 +30,8 @@ impl<'a> TimingBuilder<'a> {
         for i in 0..size_timing {
             let timing_element: &mut Module = timing_matrix.index_mut((i, 0));
 
-            *self.matrix.get_modules().index_mut((cordinates[0].0, i + FINDER_SIZE)) = *timing_element;
-            *self.matrix.get_modules().index_mut((i + FINDER_SIZE, cordinates[1].1)) = *timing_element;
+            self.matrix.set_module((cordinates[0].0, i + FINDER_SIZE), *timing_element);
+            self.matrix.set_module((i + FINDER_SIZE, cordinates[1].1), *timing_element);
         }
     }
 

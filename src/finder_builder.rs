@@ -42,8 +42,8 @@ impl<'a> FinderBuilder<'a> {
 
         for i in 0..FINDER_SIZE {
             for j in 0..FINDER_SIZE {
-                let mut main_element: &mut Module = self.matrix.get_modules().index_mut((i + start_height, j + start_width));
-                *main_element = *finder_matrix.index_mut((i, j));
+                let finder_module = finder_matrix.index_mut((i, j));
+                self.matrix.set_module((i + start_height, j + start_width), *finder_module);
             }
         }
     }

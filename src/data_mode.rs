@@ -10,12 +10,16 @@ const MODE_SIZE: usize = 2;
 
 pub enum Mode {
     Numeric,
+    Alphanumeric,
+    Byte,
 }
 
 impl Mode {
     pub fn get_bitvec(mode: &Mode) -> BitVec {
         match mode {
-            Mode::Numeric => return bitvec![0, 0, 0, 1],
+            Mode::Numeric => return BitVec::from_vec(vec![0, 0, 0, 1]),
+            Mode::Alphanumeric => return BitVec::from_vec(vec![0, 0, 1, 0]),
+            Mode::Byte => BitVec::from_vec(vec![0, 1, 0, 0]),
             _ => panic!("Stop"),
         }
     }
@@ -32,19 +36,18 @@ impl Mode {
 
         for i in bitvec.into_iter() {
             match i {
-                // 1 => vec_module.push(Module::Data(true)),
-                // 0 => vec_module.push(Module::Data(false)),
-                // _ => panic!("Opasnost"),
-                _ => println!("{}", i),
+                1 => vec_module.insert(0, Module::Data(true)),
+                0 => vec_module.insert(0, Module::Data(false)),
+                _ => panic!("Opasnost"),
             }
         }
 
-        vec_module = vec![Module::Unknown; 4];
+        let mut mode_matrix: Matrix<Module> = Matrix::from_vec(MODE_SIZE, MODE_SIZE, vec_module);
 
-        return Matrix::from_vec(MODE_SIZE, MODE_SIZE, vec_module);
+        return mode_matrix;
     }
 
     fn get_cordinate_mode(qr_matrix: &QrMatrix) -> (usize, usize) {
-        return (qr_matrix.get_size() - MODE_SIZE - 1, qr_matrix.get_size() - MODE_SIZE - 1);
+        return (qr_matrix.get_size() - MODE_SIZE, qr_matrix.get_size() - MODE_SIZE);
     }
 }

@@ -34,7 +34,7 @@ fn main() {
     let mut timing_builder: TimingBuilder = TimingBuilder::new(&mut qr_block);
     timing_builder.add_timing_blocks();
 
-    let mode: Mode = Mode::Numeric;
+    let mode: Mode = Mode::Byte;
     mode.add_mode_to_qr_matrix(&mut qr_block);
 
     qr_block.print_matrix();

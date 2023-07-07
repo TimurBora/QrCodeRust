@@ -37,8 +37,8 @@ impl QrMatrix {
 
         for i in 0..height {
             for j in 0..width {
-                let mut _module: &mut Module = self.modules.index_mut((i + start_height, j + start_width));
-                *_module = *matrix_module.index_mut((i, j));
+                let new_module = matrix_module.index_mut((i, j));
+                self.set_module((i + start_height, j + start_width), *new_module);
             }
         }
     }
@@ -47,12 +47,17 @@ impl QrMatrix {
         let start_width: usize = cordinate.1;
         let start_height: usize = cordinate.0;
 
-        for i in 0..start_height - size {
-            for j in 0..start_width - size {
-                let mut _module: &mut Module = self.modules.index_mut((i, j));
-                *_module = *matrix_module.index_mut((i, j));
+        for i in 0..size {
+            for j in 0..size {
+                let new_module = matrix_module.index_mut((i, j));
+                self.set_module((i + start_height, j + start_width), *new_module);
             }
         }
+    }
+
+    pub fn set_module(&mut self, cordinate: (usize, usize), new_module: Module) {
+        let mut _module: &mut Module = self.modules.index_mut((cordinate.0, cordinate.1));
+        *_module = new_module;
     }
 
     pub fn print_matrix(&self) {
