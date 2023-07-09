@@ -1,5 +1,7 @@
 
 
+use bitvec::vec;
+
 use crate::data_mode::Mode;
 
 pub struct NumericEncode {
@@ -11,53 +13,34 @@ impl NumericEncode {
         return NumericEncode {data: data};
     }
 
-    pub fn break_string_to_group(&self) -> Vec<Vec<u16>> {
-        let mut data_vector: Vec<u16> = self.convert_data_to_vector();
-        let mut result_vector: Vec<Vec<u16>> = Vec::new();
+    pub fn break_string_to_group(&self) -> Vec<u16> {
+        let mut data: &String = self.get_data();
+        let mut result_vector: Vec<u16> = Vec::new();
 
-        for i in 0..data_vector.len() / 3 {
-            let mut vector: Vec<u16> = Vec::new();
+        for i in 0..data.len() / 3 {
 
-            for j in 0 + i * 3..3 + i * 3 {
-                vector.push(data_vector[j]);
-            }
-
-            result_vector.push(vector);
+            result_vector.push(self.convert_string_to_int(data[0 + i * 3..3 + i * 3].to_string()));
         }
 
-        match data_vector.len() % 3 {
-            1 => result_vector.push(vec![data_vector[data_vector.len() - 1]]),
-            2 => result_vector.push(data_vector[data_vector.len()-2..].to_vec()),
-            _ => (),
+        if data.len() % 3 != 0 {
+            result_vector.push(self.get_last_elements(data).unwrap());
         }
-
-
-
-        for x in &result_vector {
-            for y in x {
-                print!("{} ", y);
-            }
-            println!("");
-        }
-
+        
         return result_vector;
 
     }
 
-    fn convert_char_to_int(&self, string_data: char) -> u16 {
-        let integer_data: u16 = string_data as u16 - 0x30;
+    fn convert_string_to_int(&self, string_data: String) -> u16 {
+        let integer_data: u16 = string_data.parse().unwrap();
         return integer_data;
     }
-
-    fn convert_data_to_vector(&self) -> Vec<u16> {
-        let data: &String = self.get_data();
-        let mut data_vector: Vec<u16> = Vec::new();
-
-        for element in data.chars() {
-            data_vector.push(self.convert_char_to_int(element));
+    
+    fn get_last_elements(&self, data: &String) -> Option<u16> {
+        match data.len() % 3 {
+            1 => return Some(self.convert_string_to_int(data[data.len() - 1..].to_string())),
+            2 => return Some(self.convert_string_to_int(data[data.len() - 2..].to_string())),
+            _ => None,
         }
-
-        return data_vector;
     }
 
     fn get_data(&self) -> &String {

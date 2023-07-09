@@ -39,7 +39,7 @@ fn main() {
     let mode: Mode = Mode::Byte;
     mode.add_mode_to_qr_matrix(&mut qr_block);
 
-    let numeric: NumericEncode = NumericEncode::new("12345".to_string());
+    let numeric: NumericEncode = NumericEncode::new("12371231249124810924890182490182409182490812947129875489175917501384901823901823981239081293192371289371289389123894".to_string());
     numeric.break_string_to_group();
 
     qr_block.print_matrix();
