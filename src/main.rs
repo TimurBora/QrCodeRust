@@ -6,13 +6,13 @@ mod timing_builder;
 mod constants;
 mod module;
 mod data_mode;
-mod data_encoding;
+mod numeric_data_encoding;
 
 use qr_matrix::QrMatrix;
 use finder_builder::FinderBuilder;
 use timing_builder::TimingBuilder;
 use data_mode::Mode;
-use data_encoding::NumericEncode;
+use numeric_data_encoding::{NumericGroups};
 
 fn get_width(cordinate1: &(usize, usize), cordinate2: &(usize, usize)) -> usize {
     let width: usize = cordinate2.1 - cordinate1.1 + 1;
@@ -39,7 +39,7 @@ fn main() {
     let mode: Mode = Mode::Byte;
     mode.add_mode_to_qr_matrix(&mut qr_block);
 
-    let numeric: NumericEncode = NumericEncode::new("12371231249124810924890182490182409182490812947129875489175917501384901823901823981239081293192371289371289389123894".to_string());
+    let numeric: NumericGroups = NumericGroups::new("12371231249124810924890182490182409182490812947129875489175917501384901823901823981239081293192371289371289389123894".to_string());
     numeric.break_string_to_group();
 
     qr_block.print_matrix();

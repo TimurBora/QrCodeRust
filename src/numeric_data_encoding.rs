@@ -4,13 +4,13 @@ use bitvec::vec;
 
 use crate::data_mode::Mode;
 
-pub struct NumericEncode {
+pub struct NumericGroups {
     data: String,
 }
 
-impl NumericEncode {
+impl NumericGroups {
     pub fn new(data: String) -> Self {
-        return NumericEncode {data: data};
+        return NumericGroups {data: data};
     }
 
     pub fn break_string_to_group(&self) -> Vec<u16> {
