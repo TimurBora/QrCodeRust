@@ -65,8 +65,8 @@ impl QrMatrix {
             for j in 0..self.size {
                 match self.modules.index((i, j)) {
                     Module::Unknown => print!("-"),
-                    Module::Function(true) => print!("1"),
                     Module::Function(false) => print!("0"),
+                    Module::Function(true) => print!("1"),
                     Module::Data(true) => print!("1"),
                     Module::Data(false) => print!("0"),
                     Module::Reserved => print!("0"),

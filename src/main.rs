@@ -6,12 +6,13 @@ mod timing_builder;
 mod constants;
 mod module;
 mod data_mode;
-mod numeric_data_encoding;
+mod numeric_data_operations;
 
 use qr_matrix::QrMatrix;
 use finder_builder::FinderBuilder;
 use timing_builder::TimingBuilder;
 use data_mode::Mode;
+use numeric_data_operations::NumericToBinaryConverter;
 
 fn get_width(cordinate1: &(usize, usize), cordinate2: &(usize, usize)) -> usize {
     let width: usize = cordinate2.1 - cordinate1.1 + 1;
@@ -38,5 +39,8 @@ fn main() {
     let mode: Mode = Mode::Byte;
     mode.add_mode_to_qr_matrix(&mut qr_block);
 
-    qr_block.print_matrix();
+    let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("0".to_string());
+    numeric_binary_convert.merge_bit_vectors();
+
+    //qr_block.print_matrix();
 }

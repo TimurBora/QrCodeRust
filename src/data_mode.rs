@@ -20,7 +20,6 @@ impl Mode {
             Mode::Numeric => return BitVec::from_vec(vec![0, 0, 0, 1]),
             Mode::Alphanumeric => return BitVec::from_vec(vec![0, 0, 1, 0]),
             Mode::Byte => BitVec::from_vec(vec![0, 1, 0, 0]),
-            _ => panic!("Stop"),
         }
     }
 
