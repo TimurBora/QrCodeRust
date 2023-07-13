@@ -3,6 +3,7 @@
 use bitvec::prelude::*;
 
 use crate::data_mode::Mode;
+use crate::append_to_bitvec;
 
 struct NumericGroups {
     data: String,
@@ -13,9 +14,9 @@ impl NumericGroups {
         return NumericGroups {data: data};
     }
 
-    fn break_string_to_group(&self) -> Vec<u16> {
+    fn break_string_to_group(&self) -> Vec<u32> {
         let data: &String = self.get_data();
-        let mut result_vector: Vec<u16> = Vec::new();
+        let mut result_vector: Vec<u32> = Vec::new();
 
         for i in 0..data.len() / 3 {
 
@@ -32,8 +33,8 @@ impl NumericGroups {
 
     }
 
-    fn convert_string_to_int(&self, string_data: String) -> u16 {
-        let integer_data: u16 = string_data.parse().unwrap();
+    fn convert_string_to_int(&self, string_data: String) -> u32 {
+        let integer_data: u32 = string_data.parse().unwrap();
         return integer_data;
     }
 
@@ -43,13 +44,21 @@ impl NumericGroups {
 }
 
 pub struct NumericToBinaryConverter {
-    integer_group_vector: Vec<u16>,
+    integer_group_vector: Vec<u32>,
 }
 
 impl NumericToBinaryConverter {
     pub fn new(data: String) -> Self {
-        let group_vector: Vec<u16> = NumericToBinaryConverter::get_group_vector(data);
+        let group_vector: Vec<u32> = NumericToBinaryConverter::get_group_vector(data);
         return NumericToBinaryConverter { integer_group_vector: group_vector };
+    }
+
+    pub fn print_bitvector(&self, bit_vector: &BitVec) {
+        for x in bit_vector.iter() {
+            print!("{} ", if *x { "1" } else { "0" });
+        }
+
+        println!("");
     }
 
     pub fn merge_bit_vectors(&self) -> BitVec {
@@ -59,15 +68,11 @@ impl NumericToBinaryConverter {
             bit_vector.append(&mut integer_bitvec);
         }
 
-        for x in bit_vector.iter() {
-            print!("{} ", if *x { "1" } else { "0" });
-        }
-
         return bit_vector;
     }
 
-    fn generate_bitvec(integer: u16) -> BitVec {
-        let bit_len = |num: u16| {
+    fn generate_bitvec(integer: u32) -> BitVec {
+        let bit_len = |num: u32| {
             if num > 99 {
                 return 10;
             }
@@ -82,12 +87,12 @@ impl NumericToBinaryConverter {
         let mut bitvector: BitVec = BitVec::new();
         bitvector.reserve(bit_len(integer));
 
-        bitvector.extend((0..bit_len(integer)).rev().map(|i| (integer >> i) & 1 != 0));
+        append_to_bitvec(&mut bitvector, &integer, bit_len(integer));
 
         return bitvector;
     }
 
-    fn get_group_vector(data: String) -> Vec<u16> {
+    fn get_group_vector(data: String) -> Vec<u32> {
         let numeric_groups: NumericGroups = NumericGroups::new(data);
         return numeric_groups.break_string_to_group(); 
     }
