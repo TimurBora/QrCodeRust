@@ -63,6 +63,7 @@ impl NumericToBinaryConverter {
 
     pub fn merge_bit_vectors(&self) -> BitVec {
         let mut bit_vector: BitVec = BitVec::new();
+        bit_vector.reserve(self.integer_group_vector.len() * 8);
         for integer in self.integer_group_vector.iter() {
             let mut integer_bitvec: BitVec = NumericToBinaryConverter::generate_bitvec(*integer);
             bit_vector.append(&mut integer_bitvec);

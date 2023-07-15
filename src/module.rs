@@ -1,6 +1,6 @@
 
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Module {
     Unknown,
     Reserved,
@@ -9,5 +9,14 @@ pub enum Module {
 }
 
 impl Module {
+    pub fn set_module(&mut self, new_module: Module) {
+        *self = new_module;
+    }
 
+    pub fn is_fun(&self) -> bool {
+        match self {
+            Module::Function(_) => return true,
+            _ => return false,
+        }
+    }
 }

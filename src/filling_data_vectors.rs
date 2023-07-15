@@ -14,8 +14,8 @@ fn add_terminator(bitvec: &mut BitVec) {
 
 fn check_terminator_len(bitvec: &BitVec) -> usize {
     let mut len_terminator = 0;
-    if bitvec.len() < 152 {
-        len_terminator = 152 - bitvec.len();
+    if bitvec.len() < 250 {
+        len_terminator = 250 - bitvec.len();
 
         if len_terminator >= 4 {
             len_terminator = 4;
@@ -35,7 +35,7 @@ fn add_more_zero_to_multiply_8(bitvec: &mut BitVec) {
 
 fn add_pad_bytes(bitvec: &mut BitVec) {
     for pad in [0xEC, 0x11].iter().cycle() {
-        if bitvec.len() >= 152 {
+        if bitvec.len() >= 250 {
             break;
         }
 

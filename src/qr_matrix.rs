@@ -10,6 +10,7 @@ use generic_matrix::Matrix;
 use std::ops::Index;
 use std::ops::IndexMut;
 
+#[derive(Debug)]
 pub struct QrMatrix {
     size: usize,
     modules: Matrix<Module>,
@@ -26,6 +27,10 @@ impl QrMatrix {
 
     pub fn get_modules(&mut self) -> &mut Matrix<Module> {
         return &mut self.modules;
+    }
+
+    pub fn get_module(&self, cordinate: (usize, usize)) -> &Module {
+        return self.modules.index(cordinate);
     }
 
     pub fn set_rect(&mut self, cordinate1: (usize, usize), cordinate2: (usize, usize), matrix_module: &mut Matrix<Module>) {
@@ -57,7 +62,7 @@ impl QrMatrix {
 
     pub fn set_module(&mut self, cordinate: (usize, usize), new_module: Module) {
         let mut _module: &mut Module = self.modules.index_mut((cordinate.0, cordinate.1));
-        *_module = new_module;
+        _module.set_module(new_module);
     }
 
     pub fn print_matrix(&self) {
@@ -65,10 +70,10 @@ impl QrMatrix {
             for j in 0..self.size {
                 match self.modules.index((i, j)) {
                     Module::Unknown => print!("-"),
-                    Module::Function(false) => print!("0"),
-                    Module::Function(true) => print!("1"),
-                    Module::Data(true) => print!("1"),
-                    Module::Data(false) => print!("0"),
+                    Module::Function(false) => print!(" "),
+                    Module::Function(true) => print!("█"),
+                    Module::Data(true) => print!("█"),
+                    Module::Data(false) => print!(" "),
                     Module::Reserved => print!("0"),
                     _ => print!("0"),
                 }
