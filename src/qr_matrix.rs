@@ -69,13 +69,12 @@ impl QrMatrix {
         for i in 0..self.size {
             for j in 0..self.size {
                 match self.modules.index((i, j)) {
-                    Module::Unknown => print!("-"),
-                    Module::Function(false) => print!(" "),
-                    Module::Function(true) => print!("█"),
-                    Module::Data(true) => print!("█"),
-                    Module::Data(false) => print!(" "),
+                    Module::Unknown => print!("██"),
+                    Module::Function(false) => print!("██"), //■
+                    Module::Function(true) => print!("  "),//█
+                    Module::Data(true) => print!("  "),//□
+                    Module::Data(false) => print!("██"),
                     Module::Reserved => print!("0"),
-                    _ => print!("0"),
                 }
             }
             println!("");

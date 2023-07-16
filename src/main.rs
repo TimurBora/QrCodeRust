@@ -22,6 +22,13 @@ use filling_data_vectors::add_bits_to_required_len;
 use encode_data_to_matrix::DataEncoder;
 use char_counter_builder::get_bitvector_char_counter;
 
+fn print_bitvec(bitvec: &BitVec) {
+    for i in bitvec {
+        print!("{} ", if *i {"1"} else {"0"});
+    }
+    println!("");
+}
+
 fn append_to_bitvec(bitvec: &mut BitVec, integer: &u32, bit_len: usize) {
     bitvec.extend((0..bit_len).rev().map(|i| (integer >> i) & 1 != 0));
 }
@@ -48,20 +55,21 @@ fn main() {
     let mut timing_builder: TimingBuilder = TimingBuilder::new(&mut qr_block);
     timing_builder.add_timing_blocks();
 
-    let mut bitvec: BitVec = BitVec::new();
-    bitvec.append(&mut Mode::get_bitvec(&Mode::Numeric));
+    let mut bitvec: BitVec = Mode::get_bitvec(&Mode::Numeric);
+    bitvec.reserve(800);
 
-    bitvec.append(&mut get_bitvector_char_counter("123123".to_string()));
+    bitvec.append(&mut get_bitvector_char_counter("12312312312312312312312312312312".to_string()));
     
-    let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("123123".to_string());
+    let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("12312312312312312312312312312312".to_string());
     let mut numeric_bitvector = numeric_binary_convert.merge_bit_vectors();
 
     add_bits_to_required_len(&mut numeric_bitvector);
 
     bitvec.append(&mut numeric_bitvector);
 
-    let mut data_encoder: DataEncoder = DataEncoder::new(bitvec.clone(), &mut qr_block);
+    let mut data_encoder: DataEncoder = DataEncoder::new(&bitvec, &mut qr_block);
     data_encoder.encode_to_matrix();
 
     qr_block.print_matrix();
+    print_bitvec(&bitvec);
 }

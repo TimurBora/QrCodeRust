@@ -44,7 +44,6 @@ impl ZigZagIt {
     fn move_vertical(&mut self) {
         if (self.upward && self.row_cordinate == 0) || (!self.upward && self.row_cordinate == self.matrix_size - 1) {
             self.change_upward();
-            self.horizontaly_next = true;
             self.move_horizontaly();
         }
         else {

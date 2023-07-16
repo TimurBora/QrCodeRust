@@ -6,6 +6,8 @@ use generic_matrix::Matrix;
 use crate::qr_matrix::QrMatrix;
 use crate::module::Module;
 
+use crate::append_to_bitvec;
+
 const MODE_SIZE: usize = 2;
 
 pub enum Mode {
@@ -16,11 +18,14 @@ pub enum Mode {
 
 impl Mode {
     pub fn get_bitvec(mode: &Mode) -> BitVec {
+        let mut bitvec: BitVec = BitVec::new();
         match mode {
-            Mode::Numeric => return BitVec::from_vec(vec![0, 0, 0, 1]),
-            Mode::Alphanumeric => return BitVec::from_vec(vec![0, 0, 1, 0]),
-            Mode::Byte => BitVec::from_vec(vec![0, 1, 0, 0]),
+            Mode::Numeric => append_to_bitvec(&mut bitvec, &1, 4),
+            //Mode::Alphanumeric => return BitVec::from_vec(vec![0, 0, 1, 0]),
+            //Mode::Byte => BitVec::from_vec(vec![0, 1, 0, 0]),
+            _ => return bitvec,
         }
+        return bitvec;
     }
 
     pub fn add_mode_to_qr_matrix(&self, qr_matrix: &mut QrMatrix) {
