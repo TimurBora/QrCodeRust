@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 bitvec = "1.0.1"
 generic-matrix = "0.2.2"
+reed-solomon-erasure = "6.0.0"

@@ -11,7 +11,10 @@ mod filling_data_vectors;
 mod encode_data_to_matrix;
 mod ZigZagIt;
 mod char_counter_builder;
+mod error_correction_level;
+mod error_correction;
 
+use error_correction::ErrorCorrection;
 use qr_matrix::QrMatrix;
 use finder_builder::FinderBuilder;
 use timing_builder::TimingBuilder;
@@ -58,9 +61,9 @@ fn main() {
     let mut bitvec: BitVec = Mode::get_bitvec(&Mode::Numeric);
     bitvec.reserve(800);
 
-    bitvec.append(&mut get_bitvector_char_counter("12312312312312312312312312312312".to_string()));
+    bitvec.append(&mut get_bitvector_char_counter("0".to_string()));
     
-    let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("12312312312312312312312312312312".to_string());
+    let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("0".to_string());
     let mut numeric_bitvector = numeric_binary_convert.merge_bit_vectors();
 
     add_bits_to_required_len(&mut numeric_bitvector);
@@ -70,6 +73,15 @@ fn main() {
     let mut data_encoder: DataEncoder = DataEncoder::new(&bitvec, &mut qr_block);
     data_encoder.encode_to_matrix();
 
-    qr_block.print_matrix();
-    print_bitvec(&bitvec);
+    //qr_block.print_matrix();
+
+    let mut data_block = vec![vec![1, 2, 3, 4, 5, 6, 7, 8]];
+
+    // Создание и заполнение вектора для исправления ошибок (error correction blocks)
+    let mut error_correction_blocks = vec![vec![0; 8]; 7];
+
+    data_block.append(&mut error_correction_blocks);
+
+    let mut error_correction: ErrorCorrection = ErrorCorrection::new(data_block, error_correction_level::ECCLevel::H);
+    error_correction.create_error_corrections_blocks();
 }
