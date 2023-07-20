@@ -19,4 +19,12 @@ impl Module {
             _ => return false,
         }
     }
+
+    pub fn flip_module(&mut self) {
+        match self {
+            Self::Data(true) => *self = Self::Data(false),
+            Self::Data(false) => *self = Self::Data(true),
+            _ => (),
+        }
+    }
 }

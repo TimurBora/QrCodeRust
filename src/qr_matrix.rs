@@ -33,6 +33,10 @@ impl QrMatrix {
         return self.modules.index(cordinate);
     }
 
+    pub fn get_mut_module(&mut self, cordinate: (usize, usize)) -> &mut Module {
+        return self.modules.index_mut(cordinate);
+    }
+
     pub fn set_rect(&mut self, cordinate1: (usize, usize), cordinate2: (usize, usize), matrix_module: &mut Matrix<Module>) {
         let start_width: usize = cordinate1.1;
         let start_height: usize = cordinate1.0;
@@ -63,6 +67,11 @@ impl QrMatrix {
     pub fn set_module(&mut self, cordinate: (usize, usize), new_module: Module) {
         let mut _module: &mut Module = self.modules.index_mut((cordinate.0, cordinate.1));
         _module.set_module(new_module);
+    }
+
+    pub fn flip_module(&mut self, cordinate: (usize, usize)) {
+        let mut _module: &mut Module = self.modules.index_mut((cordinate.0, cordinate.1));
+        _module.flip_module();
     }
 
     pub fn print_matrix(&self) {

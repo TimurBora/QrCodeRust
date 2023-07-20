@@ -23,7 +23,7 @@ impl<'a> DataEncoder<'a> {
             let module: Module = *self.qr_matrix.get_module((row_cordinate, column_cordinate));
             if module.is_fun() { continue; }
 
-            if bitvector_index > 350 {
+            if bitvector_index > 205 {
                 break;
             }
 

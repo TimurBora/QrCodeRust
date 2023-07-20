@@ -13,6 +13,8 @@ mod ZigZagIt;
 mod char_counter_builder;
 mod error_correction_level;
 mod error_correction;
+mod info_blocks;
+mod masking;
 
 use error_correction::ErrorCorrection;
 use qr_matrix::QrMatrix;
@@ -68,20 +70,23 @@ fn main() {
 
     add_bits_to_required_len(&mut numeric_bitvector);
 
-    bitvec.append(&mut numeric_bitvector);
+    let bytes_bitvector = numeric_bitvector.split(|pos, _bits| pos == 8);
+    
+    let mut byte_vector: Vec<u8> = Vec::new();
+
+    for byte in bytes_bitvector.into_iter() {
+        let integer: u8 = byte.load();
+        byte_vector.push(integer);
+    }
+
+    let data_with_ecc: Vec<u8> = ErrorCorrection::create_error_corrections_blocks(byte_vector);
+
+    for integer in data_with_ecc.iter() {
+        append_to_bitvec(&mut bitvec, &(*integer as u32), 8);
+    }
 
     let mut data_encoder: DataEncoder = DataEncoder::new(&bitvec, &mut qr_block);
     data_encoder.encode_to_matrix();
 
-    //qr_block.print_matrix();
-
-    let mut data_block = vec![vec![1, 2, 3, 4, 5, 6, 7, 8]];
-
-    // Создание и заполнение вектора для исправления ошибок (error correction blocks)
-    let mut error_correction_blocks = vec![vec![0; 8]; 7];
-
-    data_block.append(&mut error_correction_blocks);
-
-    let mut error_correction: ErrorCorrection = ErrorCorrection::new(data_block, error_correction_level::ECCLevel::H);
-    error_correction.create_error_corrections_blocks();
+    qr_block.print_matrix();
 }
