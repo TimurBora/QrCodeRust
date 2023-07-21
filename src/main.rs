@@ -26,6 +26,8 @@ use bitvec::prelude::*;
 use filling_data_vectors::add_bits_to_required_len;
 use encode_data_to_matrix::DataEncoder;
 use char_counter_builder::get_bitvector_char_counter;
+use info_blocks::InfoBlockBuilder;
+use masking::Mask;
 
 fn print_bitvec(bitvec: &BitVec) {
     for i in bitvec {
@@ -55,17 +57,22 @@ fn main() {
     let mut qr_block: QrMatrix = QrMatrix::new(21);
     let mut finder_builder: FinderBuilder = FinderBuilder::new(&mut qr_block);
 
+    let mut block_white: QrMatrix = QrMatrix::new(60);
+
     finder_builder.add_finders();
 
     let mut timing_builder: TimingBuilder = TimingBuilder::new(&mut qr_block);
     timing_builder.add_timing_blocks();
 
+    let mut info_blocks_builder: InfoBlockBuilder = InfoBlockBuilder::new(&mut qr_block);
+    info_blocks_builder.add_to_matrix();
+
     let mut bitvec: BitVec = Mode::get_bitvec(&Mode::Numeric);
     bitvec.reserve(800);
 
-    bitvec.append(&mut get_bitvector_char_counter("0".to_string()));
+    bitvec.append(&mut get_bitvector_char_counter("123".to_string()));
     
-    let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("0".to_string());
+    let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("123".to_string());
     let mut numeric_bitvector = numeric_binary_convert.merge_bit_vectors();
 
     add_bits_to_required_len(&mut numeric_bitvector);
@@ -88,5 +95,10 @@ fn main() {
     let mut data_encoder: DataEncoder = DataEncoder::new(&bitvec, &mut qr_block);
     data_encoder.encode_to_matrix();
 
-    qr_block.print_matrix();
+    let mut mask: Mask = Mask::new(&mut qr_block);
+    mask.matrix_masking();
+
+    block_white.set_square(21, (20, 20), qr_block.get_modules());
+
+    block_white.print_matrix();
 }
