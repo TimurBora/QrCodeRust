@@ -64,7 +64,6 @@ impl<'a> InfoBlockBuilder<'a> {
                 self.qr_matrix.set_module((21 - 8, 8), Module::Function(true));
                 break;
             }
-            dbg!(&format_bitvec[bitvec_index]);
 
             self.qr_matrix.set_module((20 - row, 8), Module::Function(format_bitvec[bitvec_index]));
             bitvec_index += 1;
