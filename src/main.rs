@@ -76,8 +76,6 @@ fn main() {
 
     add_bits_to_required_len(&mut numeric_bitvector);
 
-    bitvec.append(&mut numeric_bitvector);
-
     let bytes_bitvector = numeric_bitvector.split(|pos, _bits| pos == 8);
     
     let mut byte_vector: Vec<u8> = Vec::new();
@@ -89,22 +87,15 @@ fn main() {
 
     let data_with_ecc: Vec<u8> = ErrorCorrection::create_error_corrections_blocks(byte_vector);
 
-    let mut x = 0;
-    for integer in data_with_ecc.iter() {
-        if x > 18 { break; }
-        append_to_bitvec(&mut bitvec, &(*integer as u32), 8);
-        x += 1;
+    for x in data_with_ecc.iter() {
+        append_to_bitvec(&mut bitvec, &(*x as u32), 8);
     }
-
+        
     let mut data_encoder: DataEncoder = DataEncoder::new(&bitvec, &mut qr_block);
     data_encoder.encode_to_matrix();
 
     let mut mask: Mask = Mask::new(&mut qr_block);
-    //mask.matrix_masking();
-
-    for x in bitvec.iter() {
-        print!("{} ", if *x {"1"} else {"0"});
-    }
+    mask.matrix_masking();
 
     block_white.set_square(21, (20, 20), qr_block.get_modules());
 
