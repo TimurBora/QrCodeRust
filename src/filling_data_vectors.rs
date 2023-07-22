@@ -34,7 +34,7 @@ fn add_more_zero_to_multiply_8(bitvec: &mut BitVec) {
 }
 
 fn add_pad_bytes(bitvec: &mut BitVec) {
-    for pad in [0xEC, 0x11].iter().cycle() {
+    for pad in [11101100, 00010001].iter().cycle() {
         if bitvec.len() >= 152 {
             break;
         }

@@ -74,9 +74,11 @@ fn main() {
     let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("123".to_string());
     let mut numeric_bitvector = numeric_binary_convert.merge_bit_vectors();
 
-    add_bits_to_required_len(&mut numeric_bitvector);
+    bitvec.append(&mut numeric_bitvector);
 
-    let bytes_bitvector = numeric_bitvector.split(|pos, _bits| pos == 8);
+    add_bits_to_required_len(&mut bitvec);
+
+    let bytes_bitvector = bitvec.split(|pos, _bits| pos == 8);
     
     let mut byte_vector: Vec<u8> = Vec::new();
 
@@ -90,7 +92,7 @@ fn main() {
     for x in data_with_ecc.iter() {
         append_to_bitvec(&mut bitvec, &(*x as u32), 8);
     }
-        
+    
     let mut data_encoder: DataEncoder = DataEncoder::new(&bitvec, &mut qr_block);
     data_encoder.encode_to_matrix();
 
