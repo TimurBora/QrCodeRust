@@ -15,19 +15,19 @@ impl ErrorCorrection {
         return Self { error_correction_level: ecc_level, data: data };
     }
 
-    fn create_reed_solomon_encoder() -> Encoder {
-        let error_correction_blocks = 7;
-
-        let reed_encoder: Encoder = Encoder::new(error_correction_blocks);
+    fn create_reed_solomon_encoder(num_error_correction_blocks: usize) -> Encoder {
+        let reed_encoder: Encoder = Encoder::new(num_error_correction_blocks);
 
         return reed_encoder;
     }
 
-    pub fn create_error_corrections_blocks(data: Vec<u8>) -> Vec<u8> {
-        let reed_encoder: Encoder = Self::create_reed_solomon_encoder();
+    pub fn create_error_corrections_blocks(data: Vec<u8>, num_error_correction_blocks: usize) -> Vec<u8> {
+        let reed_encoder: Encoder = Self::create_reed_solomon_encoder(num_error_correction_blocks);
         
         let data_copy = reed_encoder.encode(&data).to_vec();
+
+        let error_correction_blocks: Vec<u8> = data_copy.iter().rev().take(num_error_correction_blocks).copied().rev().collect();
         
-        return data_copy;
+        return error_correction_blocks;
     }
 }

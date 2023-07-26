@@ -15,6 +15,7 @@ mod error_correction_level;
 mod error_correction;
 mod info_blocks;
 mod masking;
+mod qr_code_bitvec;
 
 use error_correction::ErrorCorrection;
 use qr_matrix::QrMatrix;
@@ -28,6 +29,9 @@ use encode_data_to_matrix::DataEncoder;
 use char_counter_builder::get_bitvector_char_counter;
 use info_blocks::InfoBlockBuilder;
 use masking::Mask;
+use qr_code_bitvec::QrCodeBitvec;
+
+use crate::filling_data_vectors::add_terminator;
 
 fn print_bitvec(bitvec: &BitVec) {
     for i in bitvec {
@@ -67,33 +71,47 @@ fn main() {
     let mut info_blocks_builder: InfoBlockBuilder = InfoBlockBuilder::new(&mut qr_block);
     info_blocks_builder.add_to_matrix();
 
-    let mut bitvec: BitVec = Mode::get_bitvec(&Mode::Numeric);
+    let mut info_bitvec: BitVec = Mode::get_bitvec(&Mode::Numeric);
 
-    bitvec.append(&mut get_bitvector_char_counter("123".to_string()));
+    info_bitvec.append(&mut get_bitvector_char_counter("123".to_string()));
+
+    let mut qr_code_bitvec: QrCodeBitvec = QrCodeBitvec::new();
+    qr_code_bitvec.append_to_info_bitvec(&mut info_bitvec);
     
     let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("123".to_string());
     let mut numeric_bitvector = numeric_binary_convert.merge_bit_vectors();
 
-    bitvec.append(&mut numeric_bitvector);
+    qr_code_bitvec.append_to_data_bitvec(&mut numeric_bitvector);
 
-    add_bits_to_required_len(&mut bitvec);
+    let qr_code_bitvec_len: usize = qr_code_bitvec.get_qr_code_bitvec_len();
+    add_bits_to_required_len(qr_code_bitvec.get_mut_data_bitvec(), qr_code_bitvec_len);
 
-    let bytes_bitvector = bitvec.split(|pos, _bits| pos == 8);
+    qr_code_bitvec.merge_bitvec();
+    let bytes_bitvector = qr_code_bitvec.get_mut_merged_bitvec().chunks(8);
     
     let mut byte_vector: Vec<u8> = Vec::new();
 
     for byte in bytes_bitvector.into_iter() {
         let integer: u8 = byte.load();
         byte_vector.push(integer);
-    }
+    }  
 
-    let data_with_ecc: Vec<u8> = ErrorCorrection::create_error_corrections_blocks(byte_vector);
+    dbg!(&byte_vector);
 
+    let data_with_ecc: Vec<u8> = ErrorCorrection::create_error_corrections_blocks(byte_vector, 7);
+
+    dbg!(&data_with_ecc);
+
+    let mut ecc_bitvec: BitVec = BitVec::new();
     for x in data_with_ecc.iter() {
-        append_to_bitvec(&mut bitvec, &(*x as u32), 8);
+        append_to_bitvec(&mut ecc_bitvec, &(*x as u32), 8);
     }
-    
-    let mut data_encoder: DataEncoder = DataEncoder::new(&bitvec, &mut qr_block);
+
+    qr_code_bitvec.append_to_ecc_bitvec(&mut ecc_bitvec);
+
+    qr_code_bitvec.merge_bitvec();
+    let data_to_encode: &mut BitVec = qr_code_bitvec.get_mut_merged_bitvec();
+    let mut data_encoder: DataEncoder = DataEncoder::new(&data_to_encode, &mut qr_block);
     data_encoder.encode_to_matrix();
 
     let mut mask: Mask = Mask::new(&mut qr_block);

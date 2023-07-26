@@ -1,0 +1,64 @@
+
+
+use bitvec::vec::BitVec;
+
+
+pub struct QrCodeBitvec {
+    info_bitvec: BitVec,
+    data_bitvec: BitVec,
+    ecc_bitvec: BitVec,
+    merged_bitvec: BitVec,
+}
+
+impl QrCodeBitvec {
+    pub fn new() -> Self {
+        let null_bitvec: BitVec = BitVec::new();
+        return Self { info_bitvec: null_bitvec.clone(), data_bitvec: null_bitvec.clone(), ecc_bitvec: null_bitvec.clone(), merged_bitvec: null_bitvec.clone()};
+    }
+
+    pub fn merge_bitvec(&mut self) {
+        self.merged_bitvec.append(&mut self.info_bitvec.clone());
+        self.merged_bitvec.append(&mut self.data_bitvec.clone());
+        self.merged_bitvec.append(&mut self.ecc_bitvec.clone());
+    }
+
+    pub fn get_qr_code_bitvec_len(&self) -> usize {
+        return self.info_bitvec.len() + self.data_bitvec.len();
+    }
+
+    pub fn append_to_info_bitvec(&mut self, append_bitvec: &mut BitVec) {
+        Self::append_to_bitvec(&mut self.info_bitvec, append_bitvec);
+    }
+
+    pub fn append_to_data_bitvec(&mut self, append_bitvec: &mut BitVec) {
+        Self::append_to_bitvec(&mut self.data_bitvec, append_bitvec);
+    }
+
+    pub fn append_to_ecc_bitvec(&mut self, append_bitvec: &mut BitVec) {
+        Self::append_to_bitvec(&mut self.ecc_bitvec, append_bitvec);
+    }
+
+    fn append_to_bitvec(main_bitvec: &mut BitVec, append_bitvec: &mut BitVec) {
+        main_bitvec.append(append_bitvec);
+    }
+
+    pub fn replace_data_bitvec(&mut self, data_bitvec: BitVec) {
+        self.data_bitvec = data_bitvec;
+    }
+
+    pub fn get_info_bitvec(&self) -> &BitVec {
+        return &self.info_bitvec;
+    }
+
+    pub fn get_data_bitvec(&self) -> &BitVec {
+        return &self.data_bitvec;
+    }
+
+    pub fn get_mut_merged_bitvec(&mut self) -> &mut BitVec {
+        return &mut self.merged_bitvec;
+    }
+    
+    pub fn get_mut_data_bitvec(&mut self) -> &mut BitVec {
+        return &mut self.data_bitvec;
+    }
+}

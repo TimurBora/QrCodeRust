@@ -43,7 +43,7 @@ impl ZigZagIt {
 
     fn move_vertical(&mut self) {
         if (self.upward && self.row_cordinate == 0) || (!self.upward && self.row_cordinate == self.matrix_size - 1) {
-            self.change_upward();
+            self.upward = !self.upward;
             self.move_horizontaly();
         }
         else {
@@ -53,10 +53,6 @@ impl ZigZagIt {
         }
 
         self.horizontaly_next = true;
-    }
-
-    fn change_upward(&mut self) {
-        self.upward = !self.upward;
     }
 }
 
