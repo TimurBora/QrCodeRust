@@ -73,12 +73,12 @@ fn main() {
 
     let mut info_bitvec: BitVec = Mode::get_bitvec(&Mode::Numeric);
 
-    info_bitvec.append(&mut get_bitvector_char_counter("3141".to_string()));
+    info_bitvec.append(&mut get_bitvector_char_counter("314159265359".to_string()));
 
     let mut qr_code_bitvec: QrCodeBitvec = QrCodeBitvec::new();
     qr_code_bitvec.append_to_info_bitvec(&mut info_bitvec);
     
-    let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("3141".to_string());
+    let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("314159265359".to_string());
     let mut numeric_bitvector = numeric_binary_convert.merge_bit_vectors();
 
     qr_code_bitvec.append_to_data_bitvec(&mut numeric_bitvector);
