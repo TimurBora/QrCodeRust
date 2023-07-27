@@ -92,7 +92,13 @@ fn main() {
     let mut byte_vector: Vec<u8> = Vec::new();
 
     for byte in bytes_bitvector.into_iter() {
-        let integer: u8 = byte.load();
+        let mut reverse_byte: BitVec = BitVec::new();
+
+        for x in byte.iter().rev() {
+            reverse_byte.push(*x);
+        }
+
+        let integer: u8 = reverse_byte.load();
         byte_vector.push(integer);
     }  
 
