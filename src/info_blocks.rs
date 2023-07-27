@@ -77,7 +77,7 @@ impl<'a> InfoBlockBuilder<'a> {
 
     fn generate_bitvec(&self) -> BitVec {
         let mut bitvec: BitVec = BitVec::new();
-        let format_integer: u32 = FORMAT_INFO[1][0] as u32;
+        let format_integer: u32 = FORMAT_INFO[0][0] as u32;
 
         append_to_bitvec(&mut bitvec, &format_integer, 15);
         return bitvec;

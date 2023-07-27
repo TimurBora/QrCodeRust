@@ -14,8 +14,8 @@ impl<'a> Mask<'a> {
     pub fn matrix_masking(&mut self) {
         for i in 0..21 {
             for j in 0..21 {
-                if i % 2 == 0 {
-                    let mut module: &mut Module = self.matrix.get_mut_module((i, j));
+                if (i + j) % 2 == 0 {
+                    let module: &mut Module = self.matrix.get_mut_module((i, j));
                     if !module.is_fun() {
                         module.flip_module();
                     }

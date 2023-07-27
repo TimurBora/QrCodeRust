@@ -73,12 +73,12 @@ fn main() {
 
     let mut info_bitvec: BitVec = Mode::get_bitvec(&Mode::Numeric);
 
-    info_bitvec.append(&mut get_bitvector_char_counter("123".to_string()));
+    info_bitvec.append(&mut get_bitvector_char_counter("3141".to_string()));
 
     let mut qr_code_bitvec: QrCodeBitvec = QrCodeBitvec::new();
     qr_code_bitvec.append_to_info_bitvec(&mut info_bitvec);
     
-    let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("123".to_string());
+    let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new("3141".to_string());
     let mut numeric_bitvector = numeric_binary_convert.merge_bit_vectors();
 
     qr_code_bitvec.append_to_data_bitvec(&mut numeric_bitvector);
@@ -86,8 +86,8 @@ fn main() {
     let qr_code_bitvec_len: usize = qr_code_bitvec.get_qr_code_bitvec_len();
     add_bits_to_required_len(qr_code_bitvec.get_mut_data_bitvec(), qr_code_bitvec_len);
 
-    qr_code_bitvec.merge_bitvec();
-    let bytes_bitvector = qr_code_bitvec.get_mut_merged_bitvec().chunks(8);
+    let mut to_ecc_bitvec: BitVec = qr_code_bitvec.merge_bitvec();
+    let bytes_bitvector = to_ecc_bitvec.chunks(8);
     
     let mut byte_vector: Vec<u8> = Vec::new();
 
@@ -102,11 +102,7 @@ fn main() {
         byte_vector.push(integer);
     }  
 
-    dbg!(&byte_vector);
-
     let data_with_ecc: Vec<u8> = ErrorCorrection::create_error_corrections_blocks(byte_vector, 7);
-
-    dbg!(&data_with_ecc);
 
     let mut ecc_bitvec: BitVec = BitVec::new();
     for x in data_with_ecc.iter() {
@@ -116,7 +112,8 @@ fn main() {
     qr_code_bitvec.append_to_ecc_bitvec(&mut ecc_bitvec);
 
     qr_code_bitvec.merge_bitvec();
-    let data_to_encode: &mut BitVec = qr_code_bitvec.get_mut_merged_bitvec();
+    let data_to_encode: BitVec = qr_code_bitvec.merge_bitvec();
+
     let mut data_encoder: DataEncoder = DataEncoder::new(&data_to_encode, &mut qr_block);
     data_encoder.encode_to_matrix();
 

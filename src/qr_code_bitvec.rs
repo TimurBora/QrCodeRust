@@ -7,19 +7,22 @@ pub struct QrCodeBitvec {
     info_bitvec: BitVec,
     data_bitvec: BitVec,
     ecc_bitvec: BitVec,
-    merged_bitvec: BitVec,
 }
 
 impl QrCodeBitvec {
     pub fn new() -> Self {
         let null_bitvec: BitVec = BitVec::new();
-        return Self { info_bitvec: null_bitvec.clone(), data_bitvec: null_bitvec.clone(), ecc_bitvec: null_bitvec.clone(), merged_bitvec: null_bitvec.clone()};
+        return Self { info_bitvec: null_bitvec.clone(), data_bitvec: null_bitvec.clone(), ecc_bitvec: null_bitvec.clone() };
     }
 
-    pub fn merge_bitvec(&mut self) {
-        self.merged_bitvec.append(&mut self.info_bitvec.clone());
-        self.merged_bitvec.append(&mut self.data_bitvec.clone());
-        self.merged_bitvec.append(&mut self.ecc_bitvec.clone());
+    pub fn merge_bitvec(&mut self) -> BitVec {
+        let mut merged_bitvec: BitVec = BitVec::new();
+
+        merged_bitvec.append(&mut self.info_bitvec.clone());
+        merged_bitvec.append(&mut self.data_bitvec.clone());
+        merged_bitvec.append(&mut self.ecc_bitvec.clone());
+
+        return merged_bitvec;
     }
 
     pub fn get_qr_code_bitvec_len(&self) -> usize {
@@ -54,8 +57,8 @@ impl QrCodeBitvec {
         return &self.data_bitvec;
     }
 
-    pub fn get_mut_merged_bitvec(&mut self) -> &mut BitVec {
-        return &mut self.merged_bitvec;
+    pub fn get_ecc_bitvec(&self) -> &BitVec {
+        return &self.ecc_bitvec;
     }
     
     pub fn get_mut_data_bitvec(&mut self) -> &mut BitVec {
