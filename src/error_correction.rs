@@ -7,12 +7,11 @@ extern crate reed_solomon_erasure;
 
 pub struct ErrorCorrection {
     error_correction_level: ECCLevel,
-    data: Vec<Vec<u8>>,
 }
 
 impl ErrorCorrection {
-    pub fn new(data: Vec<Vec<u8>>, ecc_level: ECCLevel) -> Self {
-        return Self { error_correction_level: ecc_level, data: data };
+    pub fn new(ecc_level: ECCLevel) -> Self {
+        return Self { error_correction_level: ecc_level };
     }
 
     fn create_reed_solomon_encoder(num_error_correction_blocks: usize) -> Encoder {

@@ -53,14 +53,6 @@ impl NumericToBinaryConverter {
         return NumericToBinaryConverter { integer_group_vector: group_vector };
     }
 
-    pub fn print_bitvector(&self, bit_vector: &BitVec) {
-        for x in bit_vector.iter() {
-            print!("{} ", if *x { "1" } else { "0" });
-        }
-
-        println!("");
-    }
-
     pub fn merge_bit_vectors(&self) -> BitVec {
         let mut bit_vector: BitVec = BitVec::new();
         bit_vector.reserve(self.integer_group_vector.len() * 8);

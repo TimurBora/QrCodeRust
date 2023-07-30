@@ -29,7 +29,6 @@ impl<'a> TimingBuilder<'a> {
 
         for i in 0..size_timing {
             let timing_element: &mut Module = timing_matrix.index_mut((i, 0));
-            let module = 
 
             self.matrix.set_module((cordinates[0].0, i + FINDER_SIZE), *timing_element);
             self.matrix.set_module((i + FINDER_SIZE, cordinates[1].1), *timing_element);

@@ -3,7 +3,7 @@ use bitvec::prelude::*;
 
 use crate::append_to_bitvec;
 
-pub fn get_bitvector_char_counter(character: String) -> BitVec {
+pub fn get_bitvector_char_counter(character: &String) -> BitVec {
     let mut bitvec: BitVec = BitVec::new();
     bitvec.reserve(10);
 

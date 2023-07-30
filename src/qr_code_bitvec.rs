@@ -26,7 +26,7 @@ impl QrCodeBitvec {
     }
 
     pub fn get_qr_code_bitvec_len(&self) -> usize {
-        return self.info_bitvec.len() + self.data_bitvec.len();
+        return self.info_bitvec.len() + self.data_bitvec.len() + self.ecc_bitvec.len();
     }
 
     pub fn append_to_info_bitvec(&mut self, append_bitvec: &mut BitVec) {

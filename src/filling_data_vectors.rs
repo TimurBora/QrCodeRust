@@ -28,7 +28,6 @@ fn check_terminator_len(bitvec_len: usize) -> usize {
 }
 
 pub fn add_more_zero_to_multiply_8(data_bitvec: &mut BitVec, bitvec_len: &mut usize) {
-    dbg!(&bitvec_len);
     let bitvec_zero_len: usize = 8 - *bitvec_len % 8;
 
     let mut zero_bitvec: BitVec = bitvec![0; bitvec_zero_len];
