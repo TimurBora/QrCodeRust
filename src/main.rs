@@ -86,7 +86,7 @@ fn main() {
     let qr_code_bitvec_len: usize = qr_code_bitvec.get_qr_code_bitvec_len();
     add_bits_to_required_len(qr_code_bitvec.get_mut_data_bitvec(), qr_code_bitvec_len);
 
-    let mut to_ecc_bitvec: BitVec = qr_code_bitvec.merge_bitvec();
+    let to_ecc_bitvec: BitVec = qr_code_bitvec.merge_bitvec();
     let bytes_bitvector = to_ecc_bitvec.chunks(8);
     
     let mut byte_vector: Vec<u8> = Vec::new();
