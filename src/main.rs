@@ -18,19 +18,15 @@ mod masking;
 mod qr_code_bitvec;
 mod qr_builder;
 mod bitvector_converter;
+mod aligments;
+mod version;
 
 use error_correction::ErrorCorrection;
 use qr_builder::QrBuilder;
-use qr_matrix::QrMatrix;
-use finder_builder::FinderBuilder;
-use timing_builder::TimingBuilder;
 use data_mode::Mode;
-use numeric_data_operations::NumericToBinaryConverter;
 use bitvec::prelude::*;
 use filling_data_vectors::add_bits_to_required_len;
 use encode_data_to_matrix::DataEncoder;
-use char_counter_builder::get_bitvector_char_counter;
-use info_blocks::InfoBlockBuilder;
 use masking::Mask;
 use qr_code_bitvec::QrCodeBitvec;
 

@@ -2,7 +2,6 @@
 
 use bitvec::prelude::*;
 
-use crate::data_mode::Mode;
 use crate::append_to_bitvec;
 
 struct NumericGroups {
