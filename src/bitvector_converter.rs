@@ -3,6 +3,7 @@
 use bitvec::prelude::*;
 
 use crate::numeric_data_operations::NumericToBinaryConverter;
+use crate::byte_data_operations::ByteDataBitvec;
 use crate::add_bits_to_required_len;
 use crate::char_counter_builder::get_bitvector_char_counter;
 use crate::append_to_bitvec;
@@ -11,13 +12,13 @@ use crate::data_mode::Mode;
 use crate::QrCodeBitvec;
 use crate::ErrorCorrection;
 
-pub struct BitVecConverter {
+pub struct DataBitvec {
     data: String,
 }
 
-impl BitVecConverter {
+impl DataBitvec {
     pub fn new(data: String) -> Self {
-        return BitVecConverter { data: data };
+        return DataBitvec { data: data };
     }
 
     pub fn get_result_bitvec(&self) -> BitVec {
@@ -30,13 +31,11 @@ impl BitVecConverter {
 
         self.append_ecc_bitvec(&mut qr_code_bitvec);
 
-        dbg!(qr_code_bitvec.get_qr_code_bitvec_len());
-
         return qr_code_bitvec.merge_bitvec();
     }
 
     fn append_data_bitvec(&self, qr_code_bitvec: &mut QrCodeBitvec) {
-        let mode: Mode = Mode::Numeric;
+        let mode: Mode = Mode::Byte;
 
         let mut data_bitvec: BitVec = self.convert_with_mode(mode);
 
@@ -44,7 +43,7 @@ impl BitVecConverter {
     }
 
     fn append_info_bitvec(&self, qr_code_bitvec: &mut QrCodeBitvec) {
-        let mode: Mode = Mode::Numeric;
+        let mode: Mode = Mode::Byte;
 
         let mut info_bitvec: BitVec = Mode::get_bitvec(&mode);
         info_bitvec.append(&mut get_bitvector_char_counter(&self.data));
@@ -85,6 +84,7 @@ impl BitVecConverter {
             let integer: u8 = reverse_byte.load();
             byte_vector.push(integer);
         }  
+        dbg!(&byte_vector);
 
         let data_with_ecc: Vec<u8> = ErrorCorrection::create_error_corrections_blocks(byte_vector, 7);
 
@@ -94,6 +94,7 @@ impl BitVecConverter {
     fn convert_with_mode(&self, mode: Mode) -> BitVec {
         match mode {
             Mode::Numeric => Self::numeric_binary_convert(&self.data),
+            Mode::Byte => Self::byte_binary_convery(&self.data),
             _ => panic!("Opasno!"),
         }
     }
@@ -103,6 +104,11 @@ impl BitVecConverter {
         let numeric_bitvector = numeric_binary_convert.merge_bit_vectors();
 
         return numeric_bitvector;
+    }
+
+    fn byte_binary_convery(data: &String) -> BitVec {
+        let utf8_binary_converter: ByteDataBitvec = ByteDataBitvec::new(data.to_string());
+        return utf8_binary_converter.create_bitvec();
     }
 
     fn add_bits_to_required_len(bitvector: &mut QrCodeBitvec) {

@@ -9,7 +9,7 @@ use crate::timing_builder::TimingBuilder;
 use crate::info_blocks::InfoBlockBuilder;
 use crate::numeric_data_operations::NumericToBinaryConverter;
 use crate::data_mode::Mode;
-use crate::bitvector_converter::BitVecConverter;
+use crate::bitvector_converter::DataBitvec;
 use crate::DataEncoder;
 use crate::Mask;
 
@@ -65,7 +65,7 @@ impl QrBuilder {
     }
 
     fn get_bitvec_to_encode(data: String) -> BitVec {
-        let bitvector_converter: BitVecConverter = BitVecConverter::new(data);
+        let bitvector_converter: DataBitvec = DataBitvec::new(data);
         return bitvector_converter.get_result_bitvec();
     }
 
