@@ -44,22 +44,6 @@ impl QrCodeBitvec {
     fn append_to_bitvec(main_bitvec: &mut BitVec, append_bitvec: &mut BitVec) {
         main_bitvec.append(append_bitvec);
     }
-
-    pub fn replace_data_bitvec(&mut self, data_bitvec: BitVec) {
-        self.data_bitvec = data_bitvec;
-    }
-
-    pub fn get_info_bitvec(&self) -> &BitVec {
-        return &self.info_bitvec;
-    }
-
-    pub fn get_data_bitvec(&self) -> &BitVec {
-        return &self.data_bitvec;
-    }
-
-    pub fn get_ecc_bitvec(&self) -> &BitVec {
-        return &self.ecc_bitvec;
-    }
     
     pub fn get_mut_data_bitvec(&mut self) -> &mut BitVec {
         return &mut self.data_bitvec;
