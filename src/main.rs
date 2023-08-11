@@ -21,7 +21,6 @@ mod bitvector_converter;
 mod alphanumeric_data_operations;
 mod byte_data_operations;
 
-use byte_data_operations::ByteDataBitvec;
 use error_correction::ErrorCorrection;
 use qr_builder::QrBuilder;
 use data_mode::Mode;
@@ -30,7 +29,6 @@ use filling_data_vectors::add_bits_to_required_len;
 use encode_data_to_matrix::DataEncoder;
 use masking::Mask;
 use qr_code_bitvec::QrCodeBitvec;
-use alphanumeric_data_operations::AlphaNumericGroups;
 
 fn append_to_bitvec(bitvec: &mut BitVec, integer: &u32, bit_len: usize) {
     bitvec.extend((0..bit_len).rev().map(|i| (integer >> i) & 1 != 0));
