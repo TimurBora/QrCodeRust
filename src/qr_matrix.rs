@@ -16,8 +16,10 @@ pub struct QrMatrix {
 
 impl QrMatrix {
     pub fn new(size: usize) -> Self {
-        let modules: Matrix<Module> = Matrix::from_vec(size, size, vec![Module::Unknown; size * size]);
-        QrMatrix { size: size, modules: modules }
+        let to_matrix_vec: Vec<Module> = vec![Module::Unknown; size * size];
+
+        let modules: Matrix<Module> = Matrix::from_vec(size, size, to_matrix_vec);
+        QrMatrix { size, modules }
     }
 
     pub fn get_size(&self) -> usize {
@@ -49,15 +51,15 @@ impl QrMatrix {
     }
 
     pub fn set_module(&mut self, cordinate: (usize, usize), new_module: Module) {
-        let mut _module: &mut Module = self.modules.index_mut((cordinate.0, cordinate.1));
+        let mut _module: &mut Module = self.get_mut_module(cordinate);
         _module.set_module(new_module);
     }
 
     pub fn print_matrix(&self) {
         for i in 0..self.size {
             for j in 0..self.size {
-                match self.modules.index((i, j)) {
-                    Module::Unknown => panic!("Алярм"),
+                match self.get_module((i, j)) {
+                    Module::Unknown => print!("██"),
                     Module::Function(false) => print!("██"), //■
                     Module::Function(true) => print!("  "),//█
                     Module::Data(true) => print!("  "),//□
