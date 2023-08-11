@@ -3,7 +3,7 @@
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Module {
     Unknown,
-    Reserved,
+    //Reserved,
     Data(bool),
     Function(bool),
 }
