@@ -16,7 +16,8 @@ pub struct QrMatrix {
 
 impl QrMatrix {
     pub fn new(size: usize) -> Self {
-        QrMatrix { size: size, modules: Matrix::from_vec(size, size, vec![Module::Unknown; size * size]) }
+        let modules: Matrix<Module> = Matrix::from_vec(size, size, vec![Module::Unknown; size * size]);
+        QrMatrix { size: size, modules: modules }
     }
 
     pub fn get_size(&self) -> usize {
