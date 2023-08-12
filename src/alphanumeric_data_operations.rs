@@ -1,4 +1,4 @@
-
+//Не закончено ещё(точнее пока что не начато)
 
 use bitvec::prelude::*;
 use crate::append_to_bitvec;
