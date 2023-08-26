@@ -1,26 +1,21 @@
-
-
 use bitvec::vec::BitVec;
 
-use crate::qr_code_bitvec::QrCodeBitvec;
-use crate::qr_matrix::QrMatrix;
+use crate::bitvector_converter::DataBitvec;
+use crate::data_mode::Mode;
 use crate::finder_builder::FinderBuilder;
-use crate::timing_builder::TimingBuilder;
 use crate::info_blocks::InfoBlockBuilder;
 use crate::numeric_data_operations::NumericToBinaryConverter;
-use crate::data_mode::Mode;
-use crate::bitvector_converter::DataBitvec;
+use crate::qr_code_bitvec::QrCodeBitvec;
+use crate::qr_matrix::QrMatrix;
+use crate::timing_builder::TimingBuilder;
 use crate::DataEncoder;
 use crate::Mask;
 
-
-pub struct QrBuilder {
-    qr_matrix: QrMatrix,
-}
+pub struct QrBuilder { }
 
 impl QrBuilder {
-    pub fn build(data:String, size: usize) -> Self {
-        let mut qr_matrix: QrMatrix = Self::create_qr_matrix(size);
+    pub fn build(data: String, size: usize) {
+        let mut qr_matrix = QrMatrix::new(size);
 
         let mut block_white: QrMatrix = QrMatrix::new(60);
 
@@ -33,14 +28,6 @@ impl QrBuilder {
         block_white.set_square(21, (20, 20), qr_matrix.get_modules());
 
         block_white.print_matrix();
-
-        return Self { qr_matrix: qr_matrix };
-    }
-
-    fn create_qr_matrix(size: usize) -> QrMatrix {
-        let qr_matrix: QrMatrix = QrMatrix::new(size);
-
-        return qr_matrix;
     }
 
     fn add_functional_blocks_to_matrix(qr_matrix: &mut QrMatrix) {

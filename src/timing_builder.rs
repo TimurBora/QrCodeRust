@@ -1,24 +1,20 @@
-
-
-use crate::qr_matrix::QrMatrix;
 use crate::module::Module;
+use crate::qr_matrix::QrMatrix;
 
 use crate::constants::FINDER_SIZE;
 
-use::generic_matrix;
+use ::generic_matrix;
 use generic_matrix::Matrix;
 
 use std::ops::IndexMut;
-use std::ops::Index;
-
 
 pub struct TimingBuilder<'a> {
-    matrix: &'a mut QrMatrix, 
+    matrix: &'a mut QrMatrix,
 }
 
 impl<'a> TimingBuilder<'a> {
     pub fn new(matrix: &'a mut QrMatrix) -> Self {
-        return TimingBuilder { matrix: matrix };
+        TimingBuilder { matrix: matrix }
     }
 
     pub fn add_timing_blocks(&mut self) {
@@ -30,8 +26,10 @@ impl<'a> TimingBuilder<'a> {
         for i in 0..size_timing {
             let timing_element: &mut Module = timing_matrix.index_mut((i, 0));
 
-            self.matrix.set_module((cordinates[0].0, i + FINDER_SIZE), *timing_element);
-            self.matrix.set_module((i + FINDER_SIZE, cordinates[1].1), *timing_element);
+            self.matrix
+                .set_module((cordinates[0].0, i + FINDER_SIZE), *timing_element);
+            self.matrix
+                .set_module((i + FINDER_SIZE, cordinates[1].1), *timing_element);
         }
     }
 
@@ -58,6 +56,6 @@ impl<'a> TimingBuilder<'a> {
     }
 
     fn get_size_timing(&self) -> usize {
-        return  self.matrix.get_size() - 2 * FINDER_SIZE;
+        return self.matrix.get_size() - 2 * FINDER_SIZE;
     }
 }

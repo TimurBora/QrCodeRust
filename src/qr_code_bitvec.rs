@@ -1,7 +1,4 @@
-
-
 use bitvec::vec::BitVec;
-
 
 pub struct QrCodeBitvec {
     info_bitvec: BitVec,
@@ -12,7 +9,11 @@ pub struct QrCodeBitvec {
 impl QrCodeBitvec {
     pub fn new() -> Self {
         let null_bitvec: BitVec = BitVec::new();
-        return Self { info_bitvec: null_bitvec.clone(), data_bitvec: null_bitvec.clone(), ecc_bitvec: null_bitvec.clone() };
+        return Self {
+            info_bitvec: null_bitvec.clone(),
+            data_bitvec: null_bitvec.clone(),
+            ecc_bitvec: null_bitvec.clone(),
+        };
     }
 
     pub fn merge_bitvec(&mut self) -> BitVec {
@@ -44,7 +45,7 @@ impl QrCodeBitvec {
     fn append_to_bitvec(main_bitvec: &mut BitVec, append_bitvec: &mut BitVec) {
         main_bitvec.append(append_bitvec);
     }
-    
+
     pub fn get_mut_data_bitvec(&mut self) -> &mut BitVec {
         return &mut self.data_bitvec;
     }

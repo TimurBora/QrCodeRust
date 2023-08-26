@@ -1,10 +1,8 @@
-
 use crate::module::Module;
 
-use::generic_matrix;
+use ::generic_matrix;
 use generic_matrix::Matrix;
 
-use core::panic;
 use std::ops::Index;
 use std::ops::IndexMut;
 
@@ -38,7 +36,12 @@ impl QrMatrix {
         return self.modules.index_mut(cordinate);
     }
 
-    pub fn set_square(&mut self, size: usize, cordinate: (usize, usize), matrix_module: &mut Matrix<Module>) {
+    pub fn set_square(
+        &mut self,
+        size: usize,
+        cordinate: (usize, usize),
+        matrix_module: &mut Matrix<Module>,
+    ) {
         let start_width: usize = cordinate.1;
         let start_height: usize = cordinate.0;
 
@@ -59,11 +62,11 @@ impl QrMatrix {
         for i in 0..self.size {
             for j in 0..self.size {
                 match self.get_module((i, j)) {
-                    Module::Unknown => print!("██"),
-                    Module::Function(false) => print!("██"), //■
-                    Module::Function(true) => print!("  "),//█
-                    Module::Data(true) => print!("  "),//□
-                    Module::Data(false) => print!("██"),
+                    Module::Unknown => print!("■■"),
+                    Module::Function(false) => print!("■■"), //■
+                    Module::Function(true) => print!("  "),  //█
+                    Module::Data(true) => print!("  "),      //□
+                    Module::Data(false) => print!("■■"),
                 }
             }
             println!("");

@@ -1,9 +1,8 @@
-
-
 use bitvec::prelude::*;
 
 use crate::append_to_bitvec;
 
+#[allow(dead_code)]
 pub enum Mode {
     Numeric,
     Alphanumeric,

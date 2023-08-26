@@ -1,9 +1,6 @@
-
-
 use bitvec::prelude::*;
 
 use crate::append_to_bitvec;
-
 
 pub fn add_terminator(data_bitvec: &mut BitVec, bitvec_len: &mut usize) {
     let len_terminator: usize = check_terminator_len(*bitvec_len);
@@ -54,4 +51,4 @@ pub fn add_bits_to_required_len(data_bitvec: &mut BitVec, mut bitvec_len: usize)
     add_more_zero_to_multiply_8(data_bitvec, &mut bitvec_len);
 
     add_pad_bytes(data_bitvec, &mut bitvec_len);
-} 
+}

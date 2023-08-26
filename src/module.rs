@@ -1,5 +1,3 @@
-
-
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Module {
     Unknown,

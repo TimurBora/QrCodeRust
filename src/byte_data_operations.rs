@@ -1,15 +1,13 @@
-
-
-use bitvec::prelude::*;
 use crate::append_to_bitvec;
+use bitvec::prelude::*;
 
 pub struct ByteDataBitvec {
     data: String,
 }
 
-impl ByteDataBitvec{
+impl ByteDataBitvec {
     pub fn new(data: String) -> Self {
-        return Self {data: data};
+        return Self { data: data };
     }
 
     pub fn create_bitvec(&self) -> BitVec {
@@ -26,7 +24,7 @@ impl ByteDataBitvec{
 
     fn to_bytes(&self) -> &[u8] {
         let data_bytes: &[u8] = self.data.as_bytes();
-        
+
         return data_bytes;
     }
 }

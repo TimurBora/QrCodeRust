@@ -1,16 +1,14 @@
-
-
 use bitvec::prelude::*;
 
-use crate::numeric_data_operations::NumericToBinaryConverter;
-use crate::byte_data_operations::ByteDataBitvec;
 use crate::add_bits_to_required_len;
-use crate::char_counter_builder::get_bitvector_char_counter;
 use crate::append_to_bitvec;
+use crate::byte_data_operations::ByteDataBitvec;
+use crate::char_counter_builder::get_bitvector_char_counter;
+use crate::numeric_data_operations::NumericToBinaryConverter;
 
 use crate::data_mode::Mode;
-use crate::QrCodeBitvec;
 use crate::ErrorCorrection;
+use crate::QrCodeBitvec;
 
 pub struct DataBitvec {
     data: String,
@@ -23,7 +21,7 @@ impl DataBitvec {
 
     pub fn get_result_bitvec(&self) -> BitVec {
         let mut qr_code_bitvec: QrCodeBitvec = QrCodeBitvec::new();
-        
+
         self.append_info_bitvec(&mut qr_code_bitvec);
         self.append_data_bitvec(&mut qr_code_bitvec);
 
@@ -46,7 +44,7 @@ impl DataBitvec {
         let mode: Mode = Mode::Byte;
 
         let mut info_bitvec: BitVec = Mode::get_bitvec(&mode);
-        info_bitvec.append(&mut get_bitvector_char_counter(&self.data));
+        info_bitvec.append(&mut get_bitvector_char_counter(&self.data, &mode));
 
         qr_code_bitvec.append_to_info_bitvec(&mut info_bitvec);
     }
@@ -63,15 +61,15 @@ impl DataBitvec {
         let mut ecc_bitvec: BitVec = BitVec::new();
         for integer in code_names.iter() {
             append_to_bitvec(&mut ecc_bitvec, &(*integer as u32), 8);
-        }    
-        
+        }
+
         return ecc_bitvec;
-    }  
+    }
 
     fn get_code_names(qr_code_bitvec: &mut QrCodeBitvec) -> Vec<u8> {
         let to_ecc_bitvec: BitVec = qr_code_bitvec.merge_bitvec();
         let bytes_bitvector = to_ecc_bitvec.chunks(8);
-        
+
         let mut byte_vector: Vec<u8> = Vec::new();
 
         for byte in bytes_bitvector.into_iter() {
@@ -83,10 +81,11 @@ impl DataBitvec {
 
             let integer: u8 = reverse_byte.load();
             byte_vector.push(integer);
-        }  
+        }
         dbg!(&byte_vector);
 
-        let data_with_ecc: Vec<u8> = ErrorCorrection::create_error_corrections_blocks(byte_vector, 7);
+        let data_with_ecc: Vec<u8> =
+            ErrorCorrection::create_error_corrections_blocks(byte_vector, 7);
 
         return data_with_ecc;
     }
@@ -100,7 +99,8 @@ impl DataBitvec {
     }
 
     fn numeric_binary_convert(data: &String) -> BitVec {
-        let numeric_binary_convert: NumericToBinaryConverter = NumericToBinaryConverter::new(data.to_string());
+        let numeric_binary_convert: NumericToBinaryConverter =
+            NumericToBinaryConverter::new(data.to_string());
         let numeric_bitvector = numeric_binary_convert.merge_bit_vectors();
 
         return numeric_bitvector;

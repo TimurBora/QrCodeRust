@@ -1,20 +1,18 @@
-
-
-use std::ops::IndexMut;
 use std::ops::Index;
+use std::ops::IndexMut;
 
 use crate::qr_matrix::QrMatrix;
 
 use crate::module::Module;
 
-use crate::constants::FINDER_SIZE;
 use crate::constants::FINDER_BLOCK;
+use crate::constants::FINDER_SIZE;
 
-use::generic_matrix;
+use ::generic_matrix;
 use generic_matrix::Matrix;
 
 pub struct FinderBuilder<'a> {
-    matrix: &'a mut QrMatrix,   
+    matrix: &'a mut QrMatrix,
 }
 
 impl<'a> FinderBuilder<'a> {
@@ -28,11 +26,11 @@ impl<'a> FinderBuilder<'a> {
         for cordinate in cordinates {
             self.add_finder(cordinate)
         }
-    
     }
 
     fn add_finder(&mut self, cordinate: (usize, usize, usize)) {
-        let mut finder_matrix: Matrix<Module> = Matrix::from_vec(FINDER_SIZE, FINDER_SIZE, FinderBuilder::generate_finder());
+        let mut finder_matrix: Matrix<Module> =
+            Matrix::from_vec(FINDER_SIZE, FINDER_SIZE, FinderBuilder::generate_finder());
 
         let rotate_num: usize = cordinate.2;
         FinderBuilder::rotate_finder(&mut finder_matrix, rotate_num);
@@ -43,15 +41,22 @@ impl<'a> FinderBuilder<'a> {
         for i in 0..FINDER_SIZE {
             for j in 0..FINDER_SIZE {
                 let finder_module = finder_matrix.index_mut((i, j));
-                self.matrix.set_module((i + start_height, j + start_width), *finder_module);
+                self.matrix
+                    .set_module((i + start_height, j + start_width), *finder_module);
             }
         }
     }
 
     fn get_finder_cordinate(&mut self) -> [(usize, usize, usize); 3] {
-        return [(0, 0, 0),
-                (0, self.matrix.get_modules().column() - FINDER_SIZE as usize, 1), 
-                (self.matrix.get_modules().row() - FINDER_SIZE as usize, 0, 3)];
+        return [
+            (0, 0, 0),
+            (
+                0,
+                self.matrix.get_modules().column() - FINDER_SIZE as usize,
+                1,
+            ),
+            (self.matrix.get_modules().row() - FINDER_SIZE as usize, 0, 3),
+        ];
     }
 
     fn generate_finder() -> Vec<Module> {
@@ -65,7 +70,7 @@ impl<'a> FinderBuilder<'a> {
                 }
             }
         }
-        
+
         return matrix_vector;
     }
 

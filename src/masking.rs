@@ -1,7 +1,5 @@
-
 use crate::module::Module;
 use crate::qr_matrix::QrMatrix;
-use crate::Mode;
 
 pub struct Mask<'a> {
     matrix: &'a mut QrMatrix,

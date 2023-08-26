@@ -1,5 +1,3 @@
-
-
 #[derive(Debug, Clone, Copy)]
 pub struct ZigZagIt {
     matrix_size: usize,
@@ -25,8 +23,7 @@ impl ZigZagIt {
     fn move_cordinate(&mut self) {
         if self.horizontaly_next {
             self.move_horizontaly();
-        }
-        else {
+        } else {
             self.move_vertical();
         }
     }
@@ -42,13 +39,17 @@ impl ZigZagIt {
     }
 
     fn move_vertical(&mut self) {
-        if (self.upward && self.row_cordinate == 0) || (!self.upward && self.row_cordinate == self.matrix_size - 1) {
+        if (self.upward && self.row_cordinate == 0)
+            || (!self.upward && self.row_cordinate == self.matrix_size - 1)
+        {
             self.upward = !self.upward;
             self.move_horizontaly();
-        }
-        else {
-            if self.upward { self.row_cordinate -= 1 }
-            else if !self.upward { self.row_cordinate += 1 }
+        } else {
+            if self.upward {
+                self.row_cordinate -= 1
+            } else if !self.upward {
+                self.row_cordinate += 1
+            }
             self.column_cordinate += 1;
         }
 
@@ -59,7 +60,9 @@ impl ZigZagIt {
 impl Iterator for ZigZagIt {
     type Item = (usize, usize);
     fn next(&mut self) -> Option<Self::Item> {
-        if !self.valid { return None; }
+        if !self.valid {
+            return None;
+        }
 
         let cordinates: (usize, usize) = (self.row_cordinate, self.column_cordinate);
 
